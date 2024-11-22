@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -40,8 +41,8 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBB8CxijwQB1ICTXnRERBTVqGzj8ttCmv8',
+  static FirebaseOptions web = FirebaseOptions(
+    apiKey: dotenv.env['WEB_API_KEY'] ?? 'Firebase API key not found',
     appId: '1:747915225879:web:372187f93e9724577d6552',
     messagingSenderId: '747915225879',
     projectId: 'splitmate-b6eaa',
@@ -49,16 +50,16 @@ class DefaultFirebaseOptions {
     storageBucket: 'splitmate-b6eaa.firebasestorage.app',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyC8naBhiW1dt3QPCoXjhUp3DPmXb0WrERI',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.env['ANDROID_API_KEY'] ?? 'Firebase API key not found',
     appId: '1:747915225879:android:eeb6de9a61913a9f7d6552',
     messagingSenderId: '747915225879',
     projectId: 'splitmate-b6eaa',
     storageBucket: 'splitmate-b6eaa.firebasestorage.app',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBXMhk5a-2FDdXQVuEgVGv7cAu-o3kimfM',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.env['IOS_API_KEY'] ?? 'Firebase API key not found',
     appId: '1:747915225879:ios:755e9bf0158a4af27d6552',
     messagingSenderId: '747915225879',
     projectId: 'splitmate-b6eaa',
@@ -66,8 +67,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.splitMate',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBXMhk5a-2FDdXQVuEgVGv7cAu-o3kimfM',
+  static FirebaseOptions macos = FirebaseOptions(
+    apiKey: dotenv.env['MACOS_API_KEY'] ?? 'Firebase API key not found',
     appId: '1:747915225879:ios:755e9bf0158a4af27d6552',
     messagingSenderId: '747915225879',
     projectId: 'splitmate-b6eaa',
@@ -75,8 +76,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.splitMate',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBB8CxijwQB1ICTXnRERBTVqGzj8ttCmv8',
+  static FirebaseOptions windows = FirebaseOptions(
+    apiKey: dotenv.env['WINDOWS_API_KEY'] ?? 'Firebase API key not found',
     appId: '1:747915225879:web:b4446871eaed5bc27d6552',
     messagingSenderId: '747915225879',
     projectId: 'splitmate-b6eaa',
