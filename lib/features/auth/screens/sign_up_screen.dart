@@ -2,80 +2,61 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_mate/features/auth/controller/auth_controller.dart';
-import 'package:split_mate/features/auth/screens/sign_up_screen.dart';
+import 'package:split_mate/features/auth/screens/login_screen.dart';
 import 'package:split_mate/features/auth/screens/welcome_screen.dart';
+import 'package:split_mate/core/utils.dart';
+import 'package:split_mate/core/failure.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends ConsumerStatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _usernameController.dispose();
     super.dispose();
   }
 
-  Future<void> login(BuildContext context) async {
-    // Validate input fields
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email and Password are required!')),
-      );
+  Future<void> signUp(BuildContext context) async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty || _usernameController.text.isEmpty) {
+      showSnackBar(context, 'All fields are required!');
       return;
     }
 
     final authController = ref.read(authControllerProvider.notifier);
-
     try {
-      // Attempt to sign in with email and password
-      await authController.signInWithEmail(
+      await authController.signUpWithEmail(
         context,
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      // Handle Firebase-specific errors
-      String errorMessage = _getFirebaseErrorMessage(e.code);
-
-      // Display SnackBar with custom styling for error message
-      _showErrorSnackBar(context, errorMessage);
+      final failure = Failure(_getFirebaseErrorMessage(e.code));
+      showSnackBar(context, failure.toString());
     } catch (e) {
-      // Handle any other types of errors
-      _showErrorSnackBar(context, 'An unexpected error occurred. Please try again.');
+      showSnackBar(context, 'An unexpected error occurred. Please try again.');
     }
   }
 
-  // Helper method to map Firebase error codes to user-friendly messages
   String _getFirebaseErrorMessage(String errorCode) {
     switch (errorCode) {
-      case 'user-not-found':
-        return 'No user found for that email.';
-      case 'wrong-password':
-        return 'Incorrect password. Please try again.';
+      case 'weak-password':
+        return 'Password is too weak. Please choose a stronger password.';
+      case 'email-already-in-use':
+        return 'This email is already in use. Please choose another.';
       default:
-        return 'Invalid credentials. Please check your email and password.';
+        return 'An error occurred. Please try again.';
     }
-  }
-
-  // Helper method to show error SnackBar
-  void _showErrorSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(color: Colors.white), // White text
-        ),
-        backgroundColor: Colors.red, // Red background for errors
-      ),
-    );
   }
 
   @override
@@ -108,6 +89,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 40),
               TextField(
+                controller: _usernameController,
+                decoration: const InputDecoration(
+                  labelText: 'Enter your username',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.person),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(
                   labelText: 'Enter your email',
@@ -131,16 +121,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green, // Button color
+                        backgroundColor: Colors.green,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10), // Rounded corners
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      onPressed: () => login(context),
+                      onPressed: () => signUp(context),
                       child: const Text(
-                        'Log in',
+                        'Sign Up',
                         style: TextStyle(
-                          color: Colors.white, // Text color
+                          color: Colors.white,
                           fontSize: 16,
                         ),
                       ),
@@ -149,15 +139,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account?"),
+                  const Text("Already have an account?"),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
                       );
                     },
-                    child: const Text('Sign Up'),
+                    child: const Text('Log In'),
                   ),
                 ],
               ),

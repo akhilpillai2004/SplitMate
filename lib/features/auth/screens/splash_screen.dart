@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:split_mate/features/auth/screens/login_screen.dart'; // Import LoginScreen
+import 'package:split_mate/features/auth/screens/welcome_screen.dart'; // Import WelcomeScreen
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       _controller.forward().then((value) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          MaterialPageRoute(builder: (context) => const WelcomeScreen()),
         );
       });
     });
