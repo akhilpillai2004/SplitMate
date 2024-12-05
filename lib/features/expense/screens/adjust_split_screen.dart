@@ -112,7 +112,6 @@ class _AdjustSplitScreenState extends State<AdjustSplitScreen> {
 //   });
 // }
 
-
   void _toggleSelection(UserModel member) {
     setState(() {
       if (selectedMemberIds.contains(member.uid)) {
@@ -186,7 +185,7 @@ class _AdjustSplitScreenState extends State<AdjustSplitScreen> {
                     splitWithList.add(currentUser!);
                   } // Update splitWithList when currentUser is added
                 });
-               // widget.onSelectionChanged(splitWithList);
+                // widget.onSelectionChanged(splitWithList);
                 Navigator.pop(context);
               },
             ),
@@ -256,7 +255,24 @@ class _AdjustSplitScreenState extends State<AdjustSplitScreen> {
     } else {
       // Group mode layout
       return Scaffold(
-        appBar: AppBar(title: const Text('Adjust Split')),
+        appBar: AppBar(
+          title: const Text('Adjust Split'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                // Notify the callback with the selected members' list
+                // widget.onSelectionChanged(splitWithList);
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.check,
+                color: Colors.green,
+              ),
+              // tooltip:
+              //     'Add Selected Members', // Optional: Shows when you long-press the button
+            ),
+          ],
+        ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : memberList.isEmpty
@@ -268,7 +284,8 @@ class _AdjustSplitScreenState extends State<AdjustSplitScreen> {
                           itemCount: memberList.length,
                           itemBuilder: (context, index) {
                             UserModel member = memberList[index];
-                            bool isSelected = selectedMemberIds.contains(member.uid);
+                            bool isSelected =
+                                selectedMemberIds.contains(member.uid);
 
                             return ListTile(
                               title: Text(member.name),
@@ -285,14 +302,14 @@ class _AdjustSplitScreenState extends State<AdjustSplitScreen> {
                           },
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Notify the callback with the selected members' list
-                         // widget.onSelectionChanged(splitWithList);
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Add Selected Members'),
-                      ),
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     // Notify the callback with the selected members' list
+                      //    // widget.onSelectionChanged(splitWithList);
+                      //     Navigator.pop(context);
+                      //   },
+                      //   child: const Text('Add Selected Members'),
+                      // ),
                     ],
                   ),
       );
